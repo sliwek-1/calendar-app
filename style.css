@@ -16,6 +16,7 @@
 
 #weekdays{
     width: 770px;
+    max-height: 770px;
     display: flex;
     justify-content: space-between;
 }

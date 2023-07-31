@@ -12,10 +12,10 @@ function load(){
     const dt = new Date();
     
     let day = dt.getDate();
-    let month = dt.getMonth();
+    let month = dt.getMonth()+1;
     let year = dt.getFullYear();
 
-    const firstDayOfMonth = new Date(year, month, 1); // Pobieramy pierwszy dzień miesiąca
+    let firstDayOfMonth = new Date(year, month, 1)
 
     const dateString = firstDayOfMonth.toLocaleDateString('pl-PL', {
         weekday: 'long',
@@ -24,11 +24,11 @@ function load(){
         day: 'numeric'
     })
 
-    // Oblicza ile jest dni w danym miesiącu poprzez danie zera w trzecim argumencie co oznacza liczbe jaką 
-    // prezentuje ostatni dzień poprzedniego miesiąca np dla lipca 31 dzięki dodaniu 1 do miesiąca otrzymujemy liczbe dni w obecnym miesiącu
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const paddingDays = weekdays.indexOf(dateString.split(',')[0])
+
+    renderDays(paddingDays,daysInMonth)
 
     let currentMonthName = date.toLocaleDateString('pl-PL', {
         month: 'long'
@@ -37,47 +37,56 @@ function load(){
     title.textContent = year + " " + currentMonthName;
 
     forwardBtn.addEventListener('click', () => {
+        calendar.innerHTML = ""
         month++;
+        let dateToString = new Date(year + "-" + month);
+        const dateString = dateToString.toLocaleDateString('pl-PL', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+        })
+    
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+        const paddingDays = weekdays.indexOf(dateString.split(',')[0])
+
         let newDate = year + "-" + month;
         if(month > 11){
             month = 0;
             year++;
         }
         getTitle(new Date(newDate), year)
+        renderDays(paddingDays,daysInMonth)
         console.log(newDate)
     })
 
     backwardBtn.addEventListener('click', () => {
+        calendar.innerHTML = ""
         month--;
+
+        let dateToString = new Date(year + "-" + month);
+        const dateString = dateToString.toLocaleDateString('pl-PL', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric'
+        })
+    
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+        const paddingDays = weekdays.indexOf(dateString.split(',')[0])
+
         let newDate = year + "-" + month;
         if(month <= 1){
             month = 13;
             year--;
         }
         getTitle(new Date(newDate), year)
+        renderDays(paddingDays,daysInMonth)
         console.log(newDate)
     })
 
-    for(let i = 1; i <= paddingDays + daysInMonth; i++){
-        const daySquare = document.createElement('div');
-        daySquare.classList.add('day');
-
-        if(i > paddingDays){
-            daySquare.innerText = i - paddingDays;
-            daySquare.addEventListener('click' ,(e) => {
-                let currentDay = e.target.innerText
-                let currentDate = year + "-" + (month + 1) + "-" + currentDay;
-                let currentDayName = getNameDay(new Date(currentDate));
-                let clickedDateString = currentDayName + ', ' + currentDay + "/" + (month + 1) + "/" + year;
-                
-            })
-        }else{
-            daySquare.classList.add('padding');
-        }
-
-        calendar.appendChild(daySquare);
-
-    }
 }
 
 function getNameDay(date, locate){
@@ -90,6 +99,29 @@ function getTitle(date,year){
     })
 
     title.textContent = year + " " + currentMonthName;
+}
+
+function renderDays(paddingDays,daysInMonth){
+    for(let i = 1; i <= paddingDays + daysInMonth; i++){
+        const daySquare = document.createElement('div');
+        daySquare.classList.add('day');
+
+        if(i > paddingDays){
+            daySquare.innerText = i - paddingDays;
+            daySquare.addEventListener('click' ,(e) => {
+                let currentDay = e.target.innerText
+                let currentDate = year + "-" + month + "-" + currentDay;
+                let currentDayName = getNameDay(new Date(currentDate));
+                let clickedDateString = currentDayName + ', ' + currentDay + "/" + month + "/" + year;
+                
+            })
+        }else{
+            daySquare.classList.add('padding');
+        }
+
+        calendar.appendChild(daySquare);
+
+    }
 }
 
 load();
