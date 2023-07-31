@@ -3,15 +3,17 @@ let clicked = null;
 const weekdays = ['poniedziałek', 'wtorek', 'środa', 'czwartek', 'piątek', 'sobota', 'niedziela'];
 const calendar = document.querySelector('#calendar');
 const title = document.querySelector('.yearMonth');
+let backwardBtn = document.querySelector('.backward');
+let forwardBtn = document.querySelector('.forward');
 let date = new Date();
 let locate = "pl-PL";
 
 function load(){
     const dt = new Date();
     
-    const day = dt.getDate();
-    const month = dt.getMonth();
-    const year = dt.getFullYear();
+    let day = dt.getDate();
+    let month = dt.getMonth();
+    let year = dt.getFullYear();
 
     const firstDayOfMonth = new Date(year, month, 1); // Pobieramy pierwszy dzień miesiąca
 
@@ -33,6 +35,28 @@ function load(){
     })
 
     title.textContent = year + " " + currentMonthName;
+
+    forwardBtn.addEventListener('click', () => {
+        month++;
+        let newDate = year + "-" + month;
+        if(month > 11){
+            month = 0;
+            year++;
+        }
+        getTitle(new Date(newDate), year)
+        console.log(newDate)
+    })
+
+    backwardBtn.addEventListener('click', () => {
+        month--;
+        let newDate = year + "-" + month;
+        if(month <= 1){
+            month = 13;
+            year--;
+        }
+        getTitle(new Date(newDate), year)
+        console.log(newDate)
+    })
 
     for(let i = 1; i <= paddingDays + daysInMonth; i++){
         const daySquare = document.createElement('div');
@@ -58,6 +82,14 @@ function load(){
 
 function getNameDay(date, locate){
     return date.toLocaleDateString(locate,{weekday: 'long'});
+}
+
+function getTitle(date,year){
+    let currentMonthName = date.toLocaleDateString('pl-PL', {
+        month: 'long'
+    })
+
+    title.textContent = year + " " + currentMonthName;
 }
 
 load();
