@@ -52,7 +52,7 @@ function load(){
         const paddingDays = weekdays.indexOf(dateString.split(',')[0])
 
         let newDate = year + "-" + month;
-        if(month > 11){
+        if(month == 12){
             month = 0;
             year++;
         }
@@ -78,7 +78,7 @@ function load(){
         const paddingDays = weekdays.indexOf(dateString.split(',')[0])
 
         let newDate = year + "-" + month;
-        if(month <= 1){
+        if(month == 1){
             month = 13;
             year--;
         }
@@ -113,7 +113,7 @@ function renderDays(paddingDays,daysInMonth){
                 let currentDate = year + "-" + month + "-" + currentDay;
                 let currentDayName = getNameDay(new Date(currentDate));
                 let clickedDateString = currentDayName + ', ' + currentDay + "/" + month + "/" + year;
-                
+                createDaySchedule(clickedDateString);
             })
         }else{
             daySquare.classList.add('padding');
@@ -122,6 +122,10 @@ function renderDays(paddingDays,daysInMonth){
         calendar.appendChild(daySquare);
 
     }
+}
+
+function createDaySchedule(clickedDateString){
+    
 }
 
 load();
